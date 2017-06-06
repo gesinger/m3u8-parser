@@ -160,5 +160,6 @@
   "targetDuration": 10,
   "endList": true,
   "discontinuitySequence": 0,
-  "discontinuityStarts": []
+  "discontinuityStarts": [],
+  "attributes": {}
 }

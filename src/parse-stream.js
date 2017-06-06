@@ -270,7 +270,8 @@ export default class ParseStream extends Stream {
     if (match) {
       event = {
         type: 'tag',
-        tagType: 'stream-inf'
+        tagType: 'stream-inf',
+        attributes: {}
       };
       if (match[1]) {
         event.attributes = parseAttributes(match[1]);

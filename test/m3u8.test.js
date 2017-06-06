@@ -494,7 +494,8 @@ QUnit.test('parses minimal #EXT-X-STREAM-INF tags', function() {
   QUnit.ok(element, 'an event was triggered');
   QUnit.strictEqual(element.type, 'tag', 'the line type is tag');
   QUnit.strictEqual(element.tagType, 'stream-inf', 'the tag type is stream-inf');
-  QUnit.ok(!('attributes' in element), 'no attributes are present');
+  QUnit.ok('attributes' in element, 'attributes property is present');
+  QUnit.deepEqual(element.attributes, {}, 'attributes is an empty object');
 });
 // #EXT-X-PROGRAM-DATE-TIME
 QUnit.test('parses minimal EXT-X-PROGRAM-DATE-TIME tags', function() {
@@ -748,6 +749,45 @@ QUnit.module('m3u8 parser');
 
 QUnit.test('can be constructed', function() {
   QUnit.notStrictEqual(typeof new Parser(), 'undefined', 'parser is defined');
+});
+
+QUnit.test('adds empty attributes object to media playlist', function() {
+  const parser = new Parser();
+  const manifest = [
+    '#EXTM3U',
+    '#EXTINF:5,',
+    'ex1.ts',
+    '#EXTINF:5,',
+    'ex2.ts',
+    '#EXTINF:5,',
+    'ex3.ts',
+    '#EXT-X-ENDLIST'
+  ].join('\n');
+
+  parser.push(manifest);
+  parser.end();
+
+  QUnit.ok('attributes' in parser.manifest, 'attributes property is present');
+  QUnit.deepEqual(parser.manifest.attributes, {}, 'attributes is an empty object');
+});
+
+QUnit.test('adds empty attributes object to master playlist with no attributes',
+function() {
+  const parser = new Parser();
+
+  const manifest = [
+    '#EXTM3U',
+    '#EXT-X-STREAM-INF',
+    'index.m3u8'
+  ].join('\n');
+
+  parser.push(manifest);
+  parser.end();
+
+  const playlist = parser.manifest.playlists[0];
+
+  QUnit.ok('attributes' in playlist, 'attributes property is present');
+  QUnit.deepEqual(playlist.attributes, {}, 'attributes is an empty object');
 });
 
 QUnit.test('attaches cue-out data to segment', function() {

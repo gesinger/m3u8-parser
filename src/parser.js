@@ -96,6 +96,9 @@ export default class Parser extends Stream {
               }
             },
             endlist() {
+              // add empty attributes to keep consistency with playlists generated
+              // from master
+              this.manifest.attributes = {};
               this.manifest.endList = true;
             },
             inf() {
@@ -199,13 +202,6 @@ export default class Parser extends Stream {
               this.manifest.playlists = uris;
               this.manifest.mediaGroups =
                 this.manifest.mediaGroups || defaultMediaGroups;
-
-              if (!entry.attributes) {
-                this.trigger('warn', {
-                  message: 'ignoring empty stream-inf attributes'
-                });
-                return;
-              }
 
               if (!currentUri.attributes) {
                 currentUri.attributes = {};

@@ -39,5 +39,6 @@
       }
     }
   ],
-  "endList": true
+  "endList": true,
+  "attributes": {}
 }
